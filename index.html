@@ -823,8 +823,12 @@ const CONFIG = {
   // Para usar una canción propia, poné la ruta de un .mp3 (ej. 'musica.mp3' subido junto al index.html).
   MUSIC_URL: '',
   MUSIC_VOLUME: 0.5,
-  DEMO_PIN: '1207'   // PIN solo para el modo demo (sin Apps Script). El real está en Code.gs
+  DEMO_PIN: '1207',  // PIN solo para el modo demo (sin Apps Script). El real está en Code.gs
+
+  // Rutas que muestran la invitación SIN opción de acompañantes (ej. nochenegra.vercel.app/invitacion)
+  SOLO_PATHS: ['/invitacion']
 };
+if (CONFIG.SOLO_PATHS.includes(location.pathname.replace(/\/+$/, '').replace(/\.html$/, ''))) CONFIG.MAX_COMPANIONS = 0;
 
 /* ============================================================ */
 const $ = (s, el = document) => el.querySelector(s);
@@ -1128,7 +1132,7 @@ $$('.choice').forEach(b => b.addEventListener('click', () => {
   state.asis = b.dataset.v;
   $$('.choice').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   $('#choices').classList.remove('err'); $('#errAsis').textContent = '';
-  $('#acompWrap').classList.toggle('show', state.asis === 'si');
+  $('#acompWrap').classList.toggle('show', state.asis === 'si' && CONFIG.MAX_COMPANIONS > 0);
   if (state.asis !== 'si') setAcomp(0);
   if (state.asis === 'si') { fx.burst(b, 30); sound.chime(); } else sound.soft();
   if (navigator.vibrate) navigator.vibrate(12);
