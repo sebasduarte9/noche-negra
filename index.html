@@ -1137,19 +1137,10 @@ $('#nombre').addEventListener('input', e => { e.target.classList.remove('err'); 
 
 function waLink(p) {
   const si = p.asistencia === 'si', n = Number(p.acompanantes) || 0;
-  let msg;
-  if (si) {
-    msg = `🦇🌙 *¡Hola Magi!* 🌙🦇\n\n`
-        + `¡Confirmo que voy a la *Noche Negra*! 🖤🎃\n`
-        + (n ? `Voy con *${n} acompañante${n > 1 ? 's' : ''}* 👻 (somos ${n + 1} en total)\n` : `Lista/o para la magia 🔮\n`)
-        + `\n📅 7 de diciembre · 21:00 hs\n📍 Spacio PR\n\n`
-        + `¡Nos vemos a la medianoche para celebrar tu nueva vuelta al sol! 🎂💀🍷`;
-  } else {
-    msg = `🦇🌙 *¡Hola Magi!* 🌙🦇\n\n`
-        + `Lamentablemente no voy a poder ir a la *Noche Negra* 😢🖤\n\n`
-        + `¡Te deseo un cumple mágico y una noche increíble! 🎃🔮🎂`;
-  }
-  if (p.mensaje) msg += `\n\n💌 _${p.mensaje}_`;
+  let msg = si
+    ? `🦇 ¡Hola Magi! Confirmo que voy a la *Noche Negra*${n ? ` con ${n} acompañante${n > 1 ? 's' : ''}` : ''} 🎃🖤`
+    : `🦇 ¡Hola Magi! No voy a poder ir a la *Noche Negra* 😢 ¡Feliz cumple! 🎃🖤`;
+  if (p.mensaje) msg += `\n💌 ${p.mensaje}`;
   // api.whatsapp.com conserva los emojis (wa.me los rompe al redirigir)
   return `https://api.whatsapp.com/send?phone=${CONFIG.WHATSAPP_NUMBER.replace(/\D/g, '')}&text=${encodeURIComponent(msg)}`;
 }
