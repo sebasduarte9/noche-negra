@@ -1136,12 +1136,22 @@ $$('.choice').forEach(b => b.addEventListener('click', () => {
 $('#nombre').addEventListener('input', e => { e.target.classList.remove('err'); $('#errNombre').textContent = ''; });
 
 function waLink(p) {
-  const si = p.asistencia === 'si';
-  let msg = `¡Hola Magi! 🦇 Soy ${p.nombre}. `;
-  msg += si ? `✨ Confirmo mi asistencia a Noche Negra${p.acompanantes ? ` con ${p.acompanantes} acompañante${p.acompanantes > 1 ? 's' : ''}` : ''}.`
-            : `🌙 Lamentablemente no podré asistir a Noche Negra.`;
-  if (p.mensaje) msg += `\n\n${p.mensaje}`;
-  return `https://wa.me/${CONFIG.WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
+  const si = p.asistencia === 'si', n = Number(p.acompanantes) || 0;
+  let msg;
+  if (si) {
+    msg = `🦇🌙 *¡Hola Magi!* 🌙🦇\n\n`
+        + `¡Confirmo que voy a la *Noche Negra*! 🖤🎃\n`
+        + (n ? `Voy con *${n} acompañante${n > 1 ? 's' : ''}* 👻 (somos ${n + 1} en total)\n` : `Lista/o para la magia 🔮\n`)
+        + `\n📅 7 de diciembre · 21:00 hs\n📍 Spacio PR\n\n`
+        + `¡Nos vemos a la medianoche para celebrar tu nueva vuelta al sol! 🎂💀🍷`;
+  } else {
+    msg = `🦇🌙 *¡Hola Magi!* 🌙🦇\n\n`
+        + `Lamentablemente no voy a poder ir a la *Noche Negra* 😢🖤\n\n`
+        + `¡Te deseo un cumple mágico y una noche increíble! 🎃🔮🎂`;
+  }
+  if (p.mensaje) msg += `\n\n💌 _${p.mensaje}_`;
+  // api.whatsapp.com conserva los emojis (wa.me los rompe al redirigir)
+  return `https://api.whatsapp.com/send?phone=${CONFIG.WHATSAPP_NUMBER.replace(/\D/g, '')}&text=${encodeURIComponent(msg)}`;
 }
 
 async function sendRSVP(payload) {
